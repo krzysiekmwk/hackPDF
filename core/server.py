@@ -87,6 +87,10 @@ class Server:
                 messages.send_message("CMD:SEND_PDF_FILE", client)
                 messages.send_message(pdf.read(), client, send_binary_data=True)
 
+    def start_decrypt(self):
+        for client in self.client_list.keys():
+            messages.send_message("CMD:START_DECRYPT", client)
+
 
 if __name__ == '__main__':
     '''server = Server()

@@ -1,9 +1,12 @@
 import socket
 import errno
 import sys
+import os
 from core import messages
 from core.server import Server
 from datetime import datetime
+from decrypt.dictionary_technique import DictionaryTechnique
+from decrypt.brute_force import BruteForce
 
 
 class Client:
@@ -48,8 +51,8 @@ class Client:
             pdf_file = self.receive_message_from_server(get_binary_data=True)
         pdf_file = pdf_file['data']
 
-        self.saved_pdf_file_path = datetime.now().strftime("%d-%m-%Y-%H-%M-%S") + '-' + str(id(self))
-        with open(f"{self.saved_pdf_file_path}.pdf", mode='wb') as file:
+        self.saved_pdf_file_path = datetime.now().strftime("%d-%m-%Y-%H-%M-%S") + '-' + str(id(self)) + ".pdf"
+        with open(self.saved_pdf_file_path, mode='wb') as file:
             file.write(pdf_file)
 
     def handle_commands(self):
@@ -62,12 +65,21 @@ class Client:
             if command == "CMD:SEND_PDF_FILE":
                 self.receive_pdf_file()
 
+            if command == "CMD:START_DECRYPT":
+                self.start_decode()
+
             if command == "SAY_HELLO":
                 print("Sending Hello")
                 messages.send_message("HELLO", self.server_socket)
 
     def start_decode(self):
-        pass
+        print(os.getcwd())
+        dictionary = DictionaryTechnique("decrypt" + os.sep + "dictionaries" + os.sep + "very_smoll.txt", self.saved_pdf_file_path)
+        password = dictionary.start_decode()
+        if password:
+            messages.send_message(f"CMD:FOUND_PASSWORD:{password}", self.server_socket)
+        else:
+            messages.send_message("CMD:NOT_FOUND_PASSWORD", self.server_socket)
 
 
 if __name__ == '__main__':

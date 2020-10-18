@@ -44,14 +44,24 @@ if __name__ == '__main__':
     #path_to_PDF_file = input("Give PDF path: ")
     path_to_PDF_file = "has1234.pdf"
 
-    print("Wait for clients...")
-    controller.server.receive_messages_or_add_active_socket(1)
-    while len(controller.server.client_list.keys()) < 1:
+    while True:
+        print("Wait for clients...")
         controller.server.receive_messages_or_add_active_socket(1)
+        while len(controller.server.client_list.keys()) < 1:
+            controller.server.receive_messages_or_add_active_socket(1)
 
-    print("Sending pdf")
-    controller.server.upload_pdf_to_client(path_to_PDF_file)
-    controller.server.close()
+        print("Sending pdf")
+        controller.server.upload_pdf_to_client(path_to_PDF_file)
+        controller.server.start_decrypt()
+
+        while True:
+            controller.server.receive_messages_or_add_active_socket(1)
+            for client in controller.server.client_list.values():
+                if len(client.all_messages) > 0:
+                    print(client.all_messages)
+                    client.all_messages.clear()
+            if len(controller.server.client_list.keys()) < 1:
+                break
 
 
 '''foo(controller.server)
