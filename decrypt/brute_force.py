@@ -1,0 +1,2 @@
+class BruteForce:
+    pass

@@ -1,7 +1,7 @@
-from server import Server
-from client import Client
-import time, threading
-import messages
+from core.server import Server
+from core.client import Client
+import threading
+from core import messages
 
 
 class MainController:
@@ -44,14 +44,15 @@ if __name__ == '__main__':
     #path_to_PDF_file = input("Give PDF path: ")
     path_to_PDF_file = "has1234.pdf"
 
-    while True:
-        print("Wait for clients...")
+    print("Wait for clients...")
+    controller.server.receive_messages_or_add_active_socket(1)
+    while len(controller.server.client_list.keys()) < 1:
         controller.server.receive_messages_or_add_active_socket(1)
-        while len(controller.server.client_list.keys()) < 1:
-            controller.server.receive_messages_or_add_active_socket(1)
 
-        print("Sending pdf")
-        controller.server.upload_pdf_to_client(path_to_PDF_file)
+    print("Sending pdf")
+    controller.server.upload_pdf_to_client(path_to_PDF_file)
+    controller.server.close()
+
 
 '''foo(controller.server)
 

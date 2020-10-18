@@ -1,6 +1,6 @@
 import socket
 import select
-import messages
+from core import messages
 
 
 class ClientMessages:
@@ -73,6 +73,9 @@ class Server:
         if socket_to_remove in self.sockets_list:
             self.sockets_list.remove(socket_to_remove)
         self.client_list.pop(socket_to_remove, None)
+
+    def close(self):
+        self.server_socket.close()
 
     def handle_messages(self):
         while True:

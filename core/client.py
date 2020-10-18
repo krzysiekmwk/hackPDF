@@ -1,8 +1,8 @@
 import socket
 import errno
 import sys
-import messages
-from server import Server
+from core import messages
+from core.server import Server
 from datetime import datetime
 
 
