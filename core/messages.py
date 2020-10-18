@@ -1,3 +1,5 @@
+import socket
+
 HEADER_LENGTH = 10
 
 
@@ -24,12 +26,12 @@ def receive_message(client_socket, get_binary_data=False):
         message_length = int(message_header.decode('utf-8').strip())
 
         if get_binary_data:
-            reveived_data = client_socket.recv(message_length)
+            received_data = client_socket.recv(message_length)
         else:
-            reveived_data = client_socket.recv(message_length).decode('utf-8').strip()
+            received_data = client_socket.recv(message_length).decode('utf-8').strip()
 
-        return {'header': message_header, 'data': reveived_data}
+        return {'header': message_header, 'data': received_data}
 
-    except:
+    except socket.error:
         # client closed connection violently, or just lost his connection
         return False

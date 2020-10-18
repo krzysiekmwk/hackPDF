@@ -6,7 +6,7 @@ from core import messages
 from core.server import Server
 from datetime import datetime
 from decrypt.dictionary_technique import DictionaryTechnique
-from decrypt.brute_force import BruteForce
+# from decrypt.brute_force import BruteForce
 
 
 class Client:
@@ -74,7 +74,8 @@ class Client:
 
     def start_decode(self):
         print(os.getcwd())
-        dictionary = DictionaryTechnique("decrypt" + os.sep + "dictionaries" + os.sep + "very_smoll.txt", self.saved_pdf_file_path)
+        dictionary = DictionaryTechnique("decrypt" + os.sep + "dictionaries" + os.sep + "very_small.txt",
+                                         self.saved_pdf_file_path)
         password = dictionary.start_decode()
         if password:
             messages.send_message(f"CMD:FOUND_PASSWORD:{password}", self.server_socket)

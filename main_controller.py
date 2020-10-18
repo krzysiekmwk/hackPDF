@@ -25,23 +25,23 @@ class MainController:
         pass
 
     @staticmethod
-    def run_as_client(self):
-        client = Client(Server.IP, Server.PORT)
-        client.connect_to_server()
-        client.handle_commands()
+    def run_as_client():
+        my_client = Client(Server.IP, Server.PORT)
+        my_client.connect_to_server()
+        my_client.handle_commands()
 
 
 def foo(server):
     threading.Timer(5, foo, args=(server,)).start()
-    for client, client_messages in server.client_list.items():
+    for sock_client, client_messages in server.client_list.items():
         print("Send SAY_HELLO to my: " + client_messages.address + " client")
-        messages.send_message("SAY_HELLO", client)
+        messages.send_message("SAY_HELLO", sock_client)
 
 
 if __name__ == '__main__':
     controller = MainController()
     controller.start_server()
-    #path_to_PDF_file = input("Give PDF path: ")
+    # path_to_PDF_file = input("Give PDF path: ")
     path_to_PDF_file = "has1234.pdf"
 
     while True:
