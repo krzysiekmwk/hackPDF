@@ -1,11 +1,16 @@
 HEADER_LENGTH = 10
 
 
-def send_message(message, client):
-    if message:
-        message = message.encode('utf-8')
-        message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
-        client.send(message_header + message)
+def send_message(message, client, send_binary_data=False):
+    try:
+        if message:
+            if not send_binary_data:
+                message = message.encode('utf-8')
+            message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
+            client.send(message_header + message)
+            return True
+    except (ConnectionResetError, ConnectionAbortedError, ConnectionError, ConnectionRefusedError):
+        return False
 
 
 # Handles message receiving

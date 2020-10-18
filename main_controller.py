@@ -24,6 +24,7 @@ class MainController:
     def upload_pdf_file(self):
         pass
 
+    @staticmethod
     def run_as_client(self):
         client = Client(Server.IP, Server.PORT)
         client.connect_to_server()
@@ -40,11 +41,23 @@ def foo(server):
 if __name__ == '__main__':
     controller = MainController()
     controller.start_server()
-    foo(controller.server)
+    #path_to_PDF_file = input("Give PDF path: ")
+    path_to_PDF_file = "has1234.pdf"
 
     while True:
-        for client in controller.server.client_list.values():
-            if client.last_message == "HELLO":
-                print(client.all_messages)
+        print("Wait for clients...")
+        controller.server.receive_messages_or_add_active_socket(1)
+        while len(controller.server.client_list.keys()) < 1:
+            controller.server.receive_messages_or_add_active_socket(1)
 
-        controller.server.receive_messages_or_add_active_socket()
+        print("Sending pdf")
+        controller.server.upload_pdf_to_client(path_to_PDF_file)
+
+'''foo(controller.server)
+
+while True:
+    for client in controller.server.client_list.values():
+        if client.last_message == "HELLO":
+            print(client.all_messages)
+
+    controller.server.receive_messages_or_add_active_socket()'''

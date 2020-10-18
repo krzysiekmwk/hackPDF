@@ -30,8 +30,8 @@ class Server:
         self.sockets_list = [self.server_socket]
         print(f'Start listening for connections on {Server.IP}:{Server.PORT}...')
 
-    def receive_messages_or_add_active_socket(self):
-        read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list)
+    def receive_messages_or_add_active_socket(self, time_out):
+        read_sockets, _, exception_sockets = select.select(self.sockets_list, [], self.sockets_list, time_out)
 
         # Iterate over notified sockets
         for notified_socket in read_sockets:
@@ -70,15 +70,19 @@ class Server:
             self.remove_socket(notified_socket)
 
     def remove_socket(self, socket_to_remove):
-        self.sockets_list.remove(socket_to_remove)
-        del self.client_list[socket_to_remove]
+        if socket_to_remove in self.sockets_list:
+            self.sockets_list.remove(socket_to_remove)
+        self.client_list.pop(socket_to_remove, None)
 
     def handle_messages(self):
         while True:
-            self.receive_messages_or_add_active_socket()
+            self.receive_messages_or_add_active_socket(1)
 
-    def upload_pdf_to_client(self):
-        pass
+    def upload_pdf_to_client(self, pdf_path):
+        with open(pdf_path, mode='rb') as pdf:
+            for client in self.client_list.keys():
+                messages.send_message("CMD:SEND_PDF_FILE", client)
+                messages.send_message(pdf.read(), client, send_binary_data=True)
 
 
 if __name__ == '__main__':
