@@ -23,7 +23,7 @@ class DecryptFactory:
 
         if Commands.get_value(self.last_command, Commands.DICTIONARY):
             print(os.getcwd())
-            dict_path = '..' + os.sep + "decrypt" + os.sep + "dictionaries" + os.sep + "very_small.txt"
+            dict_path = "decrypt" + os.sep + "dictionaries" + os.sep + "very_small.txt"
             decrypt_type = DictionaryTechnique(self.saved_pdf_file_path, self.client_setup, dict_path)
 
         if Commands.get_value(self.last_command, Commands.BRUTE_FORCE):

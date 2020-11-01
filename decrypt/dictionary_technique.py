@@ -9,6 +9,8 @@ class DictionaryTechnique(DecryptingTechnique):
         self.dict_file_path = dict_file_path
 
     def start_decode(self):
+        print(self.dict_file_path)
+
         with open(self.dict_file_path) as file:
             line = file.readline()
             while line:

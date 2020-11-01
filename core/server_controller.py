@@ -19,7 +19,7 @@ class ServerController(Server):
             cmd = Commands.create_command(Commands.START_DECRYPT)
             self.messages.send_message(cmd, client)
 
-    def setup_client(self, *args):
+    def setup_clients(self, *args):
         for client_num, client in enumerate(self.client_list.keys()):
             cmd = Commands.create_command(Commands.SETUP_CLIENT,
                                           Commands.COUNT_OF_CLIENTS, len(self.client_list.keys()),

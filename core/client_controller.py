@@ -3,7 +3,6 @@ from core.client import Client
 from datetime import datetime
 from core.commands import Commands
 from decrypt.decrypt_factory import DecryptFactory
-from core.server import Server
 
 
 class ClientController(Client):
@@ -55,8 +54,3 @@ class ClientController(Client):
 
         # remove unnecessary pdf file
         os.remove(self.decrypt_factory.saved_pdf_file_path)
-
-if __name__ == '__main__':
-    client = ClientController(Server.IP, Server.PORT)
-    client.connect_to_server()
-    client.handle_commands()
