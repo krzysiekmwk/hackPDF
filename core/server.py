@@ -19,6 +19,7 @@ class Server:
         self.client_list = {}
         self.sockets_list = []
         self.server_socket = None
+        self.messages = messages
 
     def start(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -76,29 +77,3 @@ class Server:
 
     def close(self):
         self.server_socket.close()
-
-    def handle_messages(self):
-        while True:
-            self.receive_messages_or_add_active_socket(1)
-
-    def upload_pdf_to_client(self, pdf_path):
-        with open(pdf_path, mode='rb') as pdf:
-            for client in self.client_list.keys():
-                messages.send_message("CMD:SEND_PDF_FILE", client)
-                messages.send_message(pdf.read(), client, send_binary_data=True)
-
-    def start_decrypt(self):
-        for client in self.client_list.keys():
-            messages.send_message("CMD:START_DECRYPT", client)
-
-
-if __name__ == '__main__':
-    '''server = Server()
-    server.start()
-
-    while True:
-        for client in server.client_list.values():
-            if client.last_message == "HELLO":
-                print(client.all_messages)
-
-        server.receive_messages_or_add_active_socket()'''
