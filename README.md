@@ -11,7 +11,7 @@ Start server:
 - if client will go (ctrl+c to kill) then server starts to listen again for clients
 
 Start client:
-`python.exe -m core.client`
+`python.exe .\main_controller.py -c`
 - client will start listening for new commands
 - if there will be **CMD:SEND_PDF_FILE** command then start to receiving pdf file
 - file will be saved in main directory with timestamp and some random id
