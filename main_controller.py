@@ -67,6 +67,7 @@ def run_as_client():
 
 
 # TODO remove it to get user input
+# PDF path, client counts, Technique
 input_return = ["has1234.pdf", 1, Commands.DICTIONARY.value]
 ret = 0
 def input(*args):
@@ -97,7 +98,7 @@ if __name__ == '__main__':
     parser.add_argument('-c', help='Start as Client.', action='store_true')
     args = parser.parse_args()
 
-    if args.c is not None:
+    if args.c:
         run_as_client()
     else:
         main()

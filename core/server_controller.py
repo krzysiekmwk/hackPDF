@@ -8,8 +8,8 @@ class ServerController(Server):
             self.receive_messages_or_add_active_socket(1)
 
     def upload_pdf_to_client(self, pdf_path):
-        with open(pdf_path, mode='rb') as pdf:
-            for client in self.client_list.keys():
+        for client in self.client_list.keys():
+            with open(pdf_path, mode='rb') as pdf:
                 cmd = Commands.create_command(Commands.SEND_PDF_FILE)
                 self.messages.send_message(cmd, client)
                 self.messages.send_message(pdf.read(), client, send_binary_data=True)
