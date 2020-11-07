@@ -22,12 +22,24 @@ class ClientController(Client):
         with open(self.decrypt_factory.saved_pdf_file_path, mode='wb') as file:
             file.write(pdf_file)
 
+    def _get_command(self):
+        command = self.receive_message_from_server(get_binary_data=False)
+        if command:
+            command = command['data']
+            print(command)
+
+        return command
+
+    def check_if_client_should_stop(self):
+        command = self._get_command()
+
+        if Commands.get_value(command, Commands.STOP_DECRYPT):
+            return True
+        return False
+
     def handle_commands(self):
         while True:
-            command = self.receive_message_from_server(get_binary_data=False)
-            if command:
-                command = command['data']
-                print(command)
+            command = self._get_command()
 
             if Commands.get_value(command, Commands.SEND_PDF_FILE):
                 self.receive_pdf_file()
@@ -37,20 +49,26 @@ class ClientController(Client):
 
             if Commands.get_value(command, Commands.START_DECRYPT):
                 self.start_decode()
+                # remove unnecessary pdf file
+                os.remove(self.decrypt_factory.saved_pdf_file_path)
+                # TODO - at this moment our client ends job after found password
+                return
 
     def start_decode(self):
-        # TODO: metods should yield values. In that case there will be possibility to
-        # TODO: check handle_command method and then if neccessary stop finding next solution
-        # TODO: simple case - other client just found solution
         decrypt_type = self.decrypt_factory.create_decrypt_object()
 
-        password = decrypt_type.start_decode()
-        if password:
-            print(f"send message -> CMD:FOUND_PASSWORD:{password}")
-            self.messages.send_message(f"CMD:FOUND_PASSWORD:{password}", self.server_socket)
-        else:
-            print("send message -> CMD:NOT_FOUND_PASSWORD")
-            self.messages.send_message("CMD:NOT_FOUND_PASSWORD", self.server_socket)
+        for password in decrypt_type.start_decode():
+            if self.check_if_client_should_stop():
+                return False
+            if password:
+                cmd = Commands.create_command(Commands.FOUND_PASSWORD, password)
+                print(f"send message ->{cmd}")
+                self.messages.send_message(cmd, self.server_socket)
+                return True
 
-        # remove unnecessary pdf file
-        os.remove(self.decrypt_factory.saved_pdf_file_path)
+        cmd = Commands.create_command(Commands.FOUND_PASSWORD)
+        print(f"send message ->{cmd}")
+        self.messages.send_message(cmd, self.server_socket)
+        return False
+
+

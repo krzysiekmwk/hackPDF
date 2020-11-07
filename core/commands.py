@@ -4,8 +4,10 @@ from enum import Enum
 class Commands(Enum):
     CMD = "CMD"
     SEND_PDF_FILE = "SEND_PDF_FILE"
-    START_DECRYPT = "START_DECRYPT"
     SETUP_CLIENT = "SETUP_CLIENT"
+
+    START_DECRYPT = "START_DECRYPT"
+    STOP_DECRYPT = "STOP_DECRYPT"
 
     COUNT_OF_CLIENTS = "COUNT_OF_CLIENTS"
     CURRENT_CLIENT = "CURRENT_CLIENT"
@@ -14,6 +16,9 @@ class Commands(Enum):
     DICTIONARY = "DICTIONARY"
     DICTIONARY_PATH = "DICTIONARY_PATH"
     BRUTE_FORCE = "BRUTE_FORCE"
+
+    FOUND_PASSWORD = "FOUND_PASSWORD"
+    NOT_FOUND_PASSWORD = "NOT_FOUND_PASSWORD"
 
     @staticmethod
     def create_command(*args):

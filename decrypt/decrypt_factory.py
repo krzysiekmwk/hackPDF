@@ -9,13 +9,14 @@ from core.client_setup import ClientSetup
 class DecryptFactory:
     def __init__(self):
         self.client_setup = ClientSetup()
+        # TODO - saved path can be None before start - change it
         self.saved_pdf_file_path = None
         self.last_command = None
         #self.client_setup.decode_type = Commands.get_value(command, Commands.DECODE_TYPE)"""
 
     def setup_client(self, command):
-        self.client_setup.count_of_clients = Commands.get_value(command, Commands.COUNT_OF_CLIENTS)
-        self.client_setup.current_client = Commands.get_value(command, Commands.CURRENT_CLIENT)
+        self.client_setup.count_of_clients = int(Commands.get_value(command, Commands.COUNT_OF_CLIENTS))
+        self.client_setup.current_client = int(Commands.get_value(command, Commands.CURRENT_CLIENT))
         self.last_command = command
 
     def create_decrypt_object(self):

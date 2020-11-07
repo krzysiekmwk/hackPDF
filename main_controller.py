@@ -18,12 +18,15 @@ class MainController:
         while True:
             self.server.receive_messages_or_add_active_socket(1)
             for client in self.server.client_list.values():
-                if len(client.all_messages) > 0:
-                    end_time = time.time()
-                    print(client.all_messages)
-                    client.all_messages.clear()
-                    print(end_time - start_time)
-                    print("CLOSE YOUR CLIENT. TRY AGAIN...")
+                for msg in client.all_messages:
+                    if Commands.get_value(msg, Commands.FOUND_PASSWORD):
+                        end_time = time.time()
+                        print("Found password !")
+                        print(client.all_messages)
+                        client.all_messages.clear()
+                        print(end_time - start_time)
+                        self.server.stop_decrypt()
+                        print("CLOSE YOUR CLIENT. TRY AGAIN...")
             if len(self.server.client_list.keys()) < 1:
                 break
 
