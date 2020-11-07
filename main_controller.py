@@ -38,9 +38,9 @@ class MainController:
         print("Sending pdf")
         self.server.upload_pdf_to_client(path_to_pdf_file)
 
-    def choose_decode_method(self, decrypt_type):
+    def choose_decode_method(self, decrypt_option):
         print("Setup clients")
-        self.server.setup_clients(Commands(decrypt_type))
+        self.server.setup_clients(decrypt_option)
 
     def wait_for_clients(self, num_of_clients):
         print(f"Wait for {num_of_clients} clients...")
@@ -49,7 +49,7 @@ class MainController:
         current_num_of_clients = len(self.server.client_list.keys())
         last_num_of_clients = 0
 
-        while current_num_of_clients < num_of_clients:
+        while current_num_of_clients < int(num_of_clients):
             self.server.receive_messages_or_add_active_socket(1)
             current_num_of_clients = len(self.server.client_list.keys())
 
@@ -71,7 +71,8 @@ def run_as_client():
 
 # TODO remove it to get user input
 # PDF path, client counts, Technique
-input_return = ["has1234.pdf", 2, Commands.BRUTE_FORCE.value]
+input_return = ["has1234.pdf", "1", r"BRUTE_FORCE:BRUTE_FORCE_REGEX:[\d]{XXX}:BRUTE_FORCE_MIN:3:BRUTE_FORCE_MAX:4"]
+#input_return = ["has1234.pdf", "1", r"DICTIONARY:DICTIONARY_PATH:decrypt\\dictionaries\\very_small.txt"]
 ret = 0
 def input(*args):
     global ret

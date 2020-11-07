@@ -11,7 +11,6 @@ class DecryptFactory:
         # TODO - saved path can be None before start - change it
         self.saved_pdf_file_path = None
         self.last_command = None
-        #self.client_setup.decode_type = Commands.get_value(command, Commands.DECODE_TYPE)"""
 
     def setup_client(self, command):
         self.client_setup.count_of_clients = int(Commands.get_value(command, Commands.COUNT_OF_CLIENTS))
@@ -22,11 +21,13 @@ class DecryptFactory:
         decrypt_type = None
 
         if Commands.get_value(self.last_command, Commands.DICTIONARY):
-            print(os.getcwd())
-            dict_path = "decrypt" + os.sep + "dictionaries" + os.sep + "very_small.txt"
-            decrypt_type = DictionaryTechnique(self.saved_pdf_file_path, self.client_setup, dict_path)
+            decrypt_type = DictionaryTechnique(self.saved_pdf_file_path, self.client_setup,
+                                               Commands.get_value(self.last_command, Commands.DICTIONARY_PATH))
 
         if Commands.get_value(self.last_command, Commands.BRUTE_FORCE):
-            decrypt_type = BruteForce(self.saved_pdf_file_path, self.client_setup)
+            decrypt_type = BruteForce(self.saved_pdf_file_path, self.client_setup,
+                                      given_regex=Commands.get_value(self.last_command, Commands.BRUTE_FORCE_REGEX),
+                                      min_pass=Commands.get_value(self.last_command, Commands.BRUTE_FORCE_MIN),
+                                      max_pass=Commands.get_value(self.last_command, Commands.BRUTE_FORCE_MAX))
 
         return decrypt_type
