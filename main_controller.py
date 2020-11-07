@@ -2,6 +2,7 @@ from core.server_controller import ServerController
 from core.client_controller import ClientController
 from core.commands import Commands
 import argparse
+import os
 
 
 class MainController:
@@ -34,9 +35,16 @@ class MainController:
         print("Start decrypt pdf")
         self.server.start_decrypt()
 
-    def upload_pdf_file(self, path_to_pdf_file):
-        print("Sending pdf")
-        self.server.upload_pdf_to_client(path_to_pdf_file)
+    def upload_files(self, files_to_upload):
+        files_path = files_to_upload.strip('][').split(', ')
+        for path in files_path:
+            path = 'files_to_send' + os.sep + path
+            if path.endswith(".pdf"):
+                print(f"Sending pdf: {path}")
+                self.server.upload_pdf_to_client(path)
+            else:
+                print(f"Sending file: {path}")
+                self.server.upload_file_to_client(path)
 
     def choose_decode_method(self, decrypt_option):
         print("Setup clients")
@@ -71,8 +79,9 @@ def run_as_client():
 
 # TODO remove it to get user input
 # PDF path, client counts, Technique
-input_return = ["has1234.pdf", "1", r"BRUTE_FORCE:BRUTE_FORCE_REGEX:[\d]{XXX}:BRUTE_FORCE_MIN:3:BRUTE_FORCE_MAX:4"]
-#input_return = ["has1234.pdf", "1", r"DICTIONARY:DICTIONARY_PATH:decrypt\\dictionaries\\very_small.txt"]
+#input_return = ["[has1234.pdf]", "1", r"BRUTE_FORCE:BRUTE_FORCE_REGEX:[\d]{XXX}:BRUTE_FORCE_MIN:3:BRUTE_FORCE_MAX:4"]
+#input_return = ["[has1234.pdf]", "1", r"DICTIONARY:DICTIONARY_PATH:decrypt\\dictionaries\\very_small.txt"]
+input_return = ["[has1234.pdf, very_small_1.txt]", "1", r"DICTIONARY:DICTIONARY_PATH:downloaded_files\\very_small_1.txt"]
 ret = 0
 def input(*args):
     global ret
@@ -88,10 +97,10 @@ def main():
     controller.start_server()
 
     while True:
-        path_to_pdf_file = input("Give PDF path: ")
+        files_to_upload = input("Give PDF path: ")
         controller.wait_for_clients(input())
         controller.choose_decode_method(input())
-        controller.upload_pdf_file(path_to_pdf_file)
+        controller.upload_files(files_to_upload)
 
         controller.start()
         controller.show_results()

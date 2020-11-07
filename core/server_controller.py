@@ -7,12 +7,17 @@ class ServerController(Server):
         while True:
             self.receive_messages_or_add_active_socket(1)
 
-    def upload_pdf_to_client(self, pdf_path):
+    def _send_file(self, file_path, cmd):
         for client in self.client_list.keys():
-            with open(pdf_path, mode='rb') as pdf:
-                cmd = Commands.create_command(Commands.SEND_PDF_FILE)
+            with open(file_path, mode='rb') as file:
                 self.messages.send_message(cmd, client)
-                self.messages.send_message(pdf.read(), client, send_binary_data=True)
+                self.messages.send_message(file.read(), client, send_binary_data=True)
+
+    def upload_pdf_to_client(self, pdf_path):
+        self._send_file(pdf_path, Commands.create_command(Commands.SEND_PDF_FILE))
+
+    def upload_file_to_client(self, file_path):
+        self._send_file(file_path, Commands.create_command(Commands.SEND_FILE, file_path))
 
     def start_decrypt(self):
         for client in self.client_list.keys():

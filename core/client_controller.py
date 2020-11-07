@@ -11,16 +11,28 @@ class ClientController(Client):
         super().__init__(server_ip, server_port)
         self.decrypt_factory = DecryptFactory()
 
-    def receive_pdf_file(self):
-        pdf_file = self.receive_message_from_server(get_binary_data=True)
-        while not pdf_file:
-            pdf_file = self.receive_message_from_server(get_binary_data=True)
-        pdf_file = pdf_file['data']
+    def _receive_file(self):
+        # TODO check bigger files
+        # TODO check receiving data throgh network
+        file = self.receive_message_from_server(get_binary_data=True)
+        while not file:
+            file = self.receive_message_from_server(get_binary_data=True)
+        return file['data']
 
-        self.decrypt_factory.saved_pdf_file_path = \
+    def receive_pdf_file(self):
+        pdf_file = self._receive_file()
+
+        self.decrypt_factory.saved_pdf_file_path = 'downloaded_files' + os.sep + \
             datetime.now().strftime("%d-%m-%Y-%H-%M-%S") + '-' + str(id(self)) + ".pdf"
         with open(self.decrypt_factory.saved_pdf_file_path, mode='wb') as file:
             file.write(pdf_file)
+
+    def receive_file(self, file_name):
+        received_file = self._receive_file()
+        saved_file_path = 'downloaded_files' + os.sep + os.path.basename(file_name)
+
+        with open(saved_file_path, mode='wb') as file:
+            file.write(received_file)
 
     def _get_command(self):
         command = self.receive_message_from_server(get_binary_data=False)
@@ -43,6 +55,9 @@ class ClientController(Client):
 
             if Commands.get_value(command, Commands.SEND_PDF_FILE):
                 self.receive_pdf_file()
+
+            if Commands.get_value(command, Commands.SEND_FILE):
+                self.receive_file(Commands.get_value(command, Commands.SEND_FILE))
 
             if Commands.get_value(command, Commands.SETUP_CLIENT):
                 self.decrypt_factory.setup_client(command)
