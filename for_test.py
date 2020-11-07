@@ -1,4 +1,3 @@
-
 input_return = ["has1234.pdf", "10"]
 ret = 0
 def input(*args):
