@@ -1,7 +1,6 @@
 import os
 from decrypt.dictionary_technique import DictionaryTechnique
-#from decrypt.brute_force import BruteForce
-from decrypt.decrypting_technique import DecryptingTechnique
+from decrypt.brute_force_technique import BruteForce
 from core.commands import Commands
 from core.client_setup import ClientSetup
 
@@ -28,7 +27,6 @@ class DecryptFactory:
             decrypt_type = DictionaryTechnique(self.saved_pdf_file_path, self.client_setup, dict_path)
 
         if Commands.get_value(self.last_command, Commands.BRUTE_FORCE):
-            pass
-            #decrypt_type =
+            decrypt_type = BruteForce(self.saved_pdf_file_path, self.client_setup)
 
         return decrypt_type

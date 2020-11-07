@@ -66,7 +66,7 @@ class ClientController(Client):
                 self.messages.send_message(cmd, self.server_socket)
                 return True
 
-        cmd = Commands.create_command(Commands.FOUND_PASSWORD)
+        cmd = Commands.create_command(Commands.NOT_FOUND_PASSWORD)
         print(f"send message ->{cmd}")
         self.messages.send_message(cmd, self.server_socket)
         return False

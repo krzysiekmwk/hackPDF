@@ -71,7 +71,7 @@ def run_as_client():
 
 # TODO remove it to get user input
 # PDF path, client counts, Technique
-input_return = ["has1234.pdf", 1, Commands.DICTIONARY.value]
+input_return = ["has1234.pdf", 2, Commands.BRUTE_FORCE.value]
 ret = 0
 def input(*args):
     global ret
