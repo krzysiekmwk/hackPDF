@@ -1,6 +1,6 @@
 import abc
 from core.client_setup import ClientSetup
-import PyPDF2
+import pikepdf
 
 
 class DecryptingTechnique(abc.ABC):
@@ -16,9 +16,7 @@ class DecryptingTechnique(abc.ABC):
 
     def try_decode(self, password):
         try:
-            pdf_reader = PyPDF2.PdfFileReader(self.pdf_file_path)
-            pdf_reader.decrypt(password)
-            pdf_reader.getPage(0)
+            pikepdf.open(self.pdf_file_path, password=password)
             return password
-        except PyPDF2.utils.PdfReadError:
+        except:
             return False
